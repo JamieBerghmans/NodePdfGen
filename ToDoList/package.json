@@ -1,0 +1,13 @@
+{
+  "name": "my-pdf-project",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "jspdf": "^2.5.1",
+    "open": "^9.0.0"
+  }
+}
