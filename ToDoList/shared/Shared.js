@@ -5,11 +5,13 @@ import { Helper } from './Helper.js';
 class Shared {
   constructor() {
     if (!Shared.instance) {
-      this.pdf = new jsPDF({ unit: 'pt', format: 'a5' });
       this.cfg = {
-        pageWidth: 420,
+        pageWidth: 460,
         pageHeight: 595,
-        margin: 30,
+        marginTop: 20,
+        marginRight: 45,
+        marginBottom: 20,
+        marginLeft: 5,
         rowHeight: 28,
         taskCount: 18,
         subTaskCount: 17,
@@ -19,13 +21,30 @@ class Shared {
         white: 255,
         rowColors: [
           [255, 255, 255],
-          [207, 243, 250]
+          [109, 215, 237]
         ],
         headerColors: [
-          [255, 210, 218], [255, 225, 200], [255, 250, 180], [210, 255, 210], [200, 255, 250],
-          [210, 235, 255], [225, 210, 255], [235, 210, 255], [245, 210, 255], [255, 210, 245]
+          [255, 99, 71],
+          [255, 165, 0],
+          [50, 205, 50],
+          [0, 255, 255],
+          [0, 191, 255],
+          [138, 43, 226],
+          [255, 20, 147],
+          [240, 230, 140],
+          [255, 105, 180],
+          [127, 255, 0]
         ],
       };
+
+      this.pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: [this.cfg.pageWidth, this.cfg.pageHeight],
+        putOnlyUsedFonts: true,
+        floatPrecision: 16 // Default is 16, but can be set to a lower value for performance
+      });
+
       this.helper = new Helper();
       this.componentsBuilder = new ComponentsBuilder(this.pdf, this.cfg, this.helper);
       Shared.instance = this;

@@ -1,4 +1,4 @@
-import { pdf, cfg, componentsBuilder } from "../shared/Shared.js";
+import { pdf, cfg, componentsBuilder } from "../../../shared/Shared.js";
 
 export class NotePage {
 
@@ -9,12 +9,12 @@ export class NotePage {
         if (background) {
             const height = subtitle ? 40 : 30;
             pdf.setFillColor(...cfg.headerColors[(index ?? 0) % cfg.headerColors.length]);
-            pdf.rect(cfg.margin - 10, cfg.margin - 20, 200, height, 'F');
+            pdf.rect(cfg.marginLeft + 5, cfg.marginTop - 10, 200, height, 'F');
         }
 
         // Header
         pdf.setTextColor(0);
-        componentsBuilder.drawPageHeader(cfg.margin, cfg.margin, title, titleBold, subtitle);
+        componentsBuilder.drawPageHeader(cfg.marginLeft + 20, cfg.marginTop + 10, title, titleBold, subtitle);
 
         // Draw buttons
         let buttons = [
@@ -25,11 +25,11 @@ export class NotePage {
                 { text: "Subtasks", pageNumber: homePage + (index + 2) + cfg.taskCount, link: true }
             );
         }
-        componentsBuilder.drawMenu(cfg.pageWidth - cfg.margin, cfg.margin - 2, buttons, 10)
+        componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight, cfg.marginTop + 10, buttons, 15)
 
         // Lines
         pdf.setDrawColor(cfg.grey);
-        for (let y = 100; y < cfg.pageHeight - cfg.margin; y += 20)
-            pdf.line(cfg.margin, y, cfg.pageWidth - cfg.margin, y);
+        for (let y = 100; y < cfg.pageHeight - cfg.marginBottom; y += cfg.rowHeight)
+            pdf.line(cfg.marginLeft, y, cfg.pageWidth - cfg.marginRight, y);
     }
 }

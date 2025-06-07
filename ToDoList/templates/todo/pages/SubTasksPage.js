@@ -1,32 +1,29 @@
-import { pdf, cfg, componentsBuilder, helper } from '../shared/Shared.js';
-import { TableConfig } from '../shared/TableConfig.js';
+import { pdf, cfg, componentsBuilder, helper } from '../../../shared/Shared.js';
+import { TableConfig } from '../../../shared/TableConfig.js';
 
 export class SubTasksPage {
 
     build(index, sectionIndex, homePage) {
         pdf.addPage();
 
-        let startX = cfg.margin;
-        let startY = cfg.margin;
-
         // Background
         const height = 40;
         pdf.setFillColor(...cfg.headerColors[(index ?? 0) % cfg.headerColors.length]);
-        pdf.rect(cfg.margin - 10, cfg.margin - 20, 200, height, 'F');
+        pdf.rect(cfg.marginLeft + 5, cfg.marginTop - 10, 200, height, 'F');
 
         pdf.setTextColor(0);
-        componentsBuilder.drawPageHeader(startX, startY, "Sub Task ", "Triage", `Task #${(index + 1) + (sectionIndex * cfg.taskCount)}`);
+        componentsBuilder.drawPageHeader(cfg.marginLeft + 10, cfg.marginTop + 10, "Sub Task ", "Triage", `Task #${(index + 1) + (sectionIndex * cfg.taskCount)}`);
         
-        componentsBuilder.drawMenu(cfg.pageWidth - cfg.margin, cfg.margin - 2, [
+        componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight, cfg.marginTop + 10, [
             { text: "Home", pageNumber: homePage, link: true },
             { text: "Notes", pageNumber: homePage + 1 + index + 1, link: true }
-        ], 10)
+        ], 15)
 
         const tableConfig = new TableConfig();
-        tableConfig.Length = cfg.pageWidth - (2 * cfg.margin);
+        tableConfig.Length = cfg.pageWidth - cfg.marginLeft - cfg.marginRight;
         tableConfig.Columns = [
             {
-                Width: 190,
+                Width: 240,
                 Text: 'Sub Task Description'
             },
             {
@@ -47,7 +44,7 @@ export class SubTasksPage {
             }
         ];
 
-        componentsBuilder.drawTable(startX, startY + 40, tableConfig, (rowIndex, columnIndex, xLeading, xTrailing, yTop, yCenter, yBottom) => {
+        componentsBuilder.drawTable(cfg.marginLeft, cfg.marginTop + 60, tableConfig, (rowIndex, columnIndex, xLeading, xTrailing, yTop, yCenter, yBottom) => {
             pdf.setLineWidth(tableConfig.DividerLineWidth)
             
             if (columnIndex === 0) {
@@ -81,20 +78,5 @@ export class SubTasksPage {
                 pdf.setLineDashPattern(lineDashPattern, 0);
             }
         });
-
-        // // Home button
-        // componentsBuilder.drawText(cfg.pageWidth - cfg.margin - 70, cfg.margin - 2, 1, "Home", 10, true);
-
-        // // Divider
-        // const dividerX = cfg.pageWidth - cfg.margin - 38;
-        // const dividerStartY = cfg.margin - 12;
-        // const dividerEndY = dividerStartY + 14;
-        // pdf.setLineWidth(1);
-        // pdf.setDrawColor(cfg.grey);
-        // pdf.line(dividerX, dividerStartY, dividerX, dividerEndY);
-        // pdf.setLineWidth(0.1);
-
-        // // Subtasks button
-        // componentsBuilder.drawText(cfg.pageWidth - cfg.margin - 33, cfg.margin - 2, index + 3, "Notes", 10, true);
     }
 }

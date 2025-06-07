@@ -2,7 +2,7 @@ import open from "open";
 import { HomePage } from "./pages/HomePage.js";
 import { NotePage } from "./pages/NotePage.js";
 import { SubTasksPage } from "./pages/SubTasksPage.js";
-import { cfg, pdf } from "./shared/Shared.js";
+import { cfg, pdf } from "../../shared/Shared.js";
 
 const mainPage = new HomePage(pdf, cfg);
 const notePage = new NotePage(pdf, cfg);
@@ -25,5 +25,5 @@ for (let i = 0; i < cfg.sectionCount; i++) {
     }
 }
 
-pdf.save("Boox_ToDo_Notes.pdf");
-open("Boox_ToDo_Notes.pdf");
+pdf.save("templates/todo/ToDo Template.pdf");
+open("templates/todo/ToDo Template.pdf");

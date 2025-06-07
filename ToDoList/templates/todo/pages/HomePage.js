@@ -1,5 +1,5 @@
-import { pdf, cfg, componentsBuilder, helper } from '../shared/Shared.js';
-import { TableConfig } from '../shared/TableConfig.js';
+import { pdf, cfg, componentsBuilder, helper } from '../../../shared/Shared.js';
+import { TableConfig } from '../../../shared/TableConfig.js';
 
 export class HomePage {
 
@@ -8,10 +8,7 @@ export class HomePage {
             pdf.addPage();
         }
 
-        let startX = cfg.margin;
-        let startY = cfg.margin;
-
-        componentsBuilder.drawPageHeader(startX, startY, "To Do ", "List");
+        componentsBuilder.drawPageHeader(cfg.marginLeft + 20, cfg.marginTop + 10, "To Do ", "List");
 
         // === Buttons ===
         const buttons = [];
@@ -22,19 +19,19 @@ export class HomePage {
         if (sectionIndex < cfg.sectionCount - 1) {
             buttons.push({ text: "Next", pageNumber: homePage + pagesPerSection, link: true });
         }
-        
-        componentsBuilder.drawMenu(cfg.pageWidth - cfg.margin, cfg.margin - 2, buttons, 10)
+
+        componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight, cfg.marginTop + 10, buttons, 15)
 
         const tableConfig = new TableConfig();
-        tableConfig.Length = cfg.pageWidth - (2 * cfg.margin);
+        tableConfig.Length = cfg.pageWidth - cfg.marginLeft - cfg.marginRight;
         tableConfig.Columns = [
             {
-                Width: 160,
+                Width: 202,
                 DividerLine: true,
                 Text: 'Task',
             },
             {
-                Width: 50,
+                Width: 60,
                 Text: 'Due'
             },
             {
@@ -61,16 +58,11 @@ export class HomePage {
             }
         ];
 
-        componentsBuilder.drawTable(startX, startY + 20, tableConfig, (rowIndex, columnIndex, xLeading, xTrailing, yTop, yCenter, yBottom) => {
+        componentsBuilder.drawTable(cfg.marginLeft, cfg.marginTop + 40, tableConfig, (rowIndex, columnIndex, xLeading, xTrailing, yTop, yCenter, yBottom) => {
             pdf.setLineWidth(tableConfig.DividerLineWidth)
-            
-            if (rowIndex % 2 === 0) {
-                pdf.setDrawColor(cfg.grey);
-                pdf.setTextColor(cfg.grey);
-            } else {
-                pdf.setDrawColor(cfg.grey);
-                pdf.setTextColor(cfg.grey);
-            }
+
+            pdf.setDrawColor(cfg.black);
+            pdf.setTextColor(cfg.black);
 
             // Numbering + checkbox
             if (columnIndex === 0) {

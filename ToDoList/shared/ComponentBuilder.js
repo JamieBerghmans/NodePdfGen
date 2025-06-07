@@ -60,6 +60,10 @@ export class ComponentsBuilder {
 
     if (link) {
       this.pdf.link(x - 4, y - fontSize - 4, textWidth + 8, fontSize + 8, { pageNumber });
+      const lineWidth = this.pdf.getLineWidth();
+      this.pdf.setLineWidth(0.5);
+      this.pdf.line(x - 2, y + 2, x + textWidth + 2, y + 2);
+      this.pdf.setLineWidth(lineWidth);
     }
   }
 
@@ -80,15 +84,15 @@ export class ComponentsBuilder {
     }
   };
 
-  drawTableHeaders = (startX, y, config) => {
-    if (!config.IncludeHeaders) return;
+  drawTableHeaders = (startX, y, tableConfig) => {
+    if (!tableConfig.IncludeHeaders) return;
 
     let x = startX;
-    config.Columns.forEach((columnConfig, i) => {
-      const fontSize = columnConfig.FontSize ?? config.HeaderFontSize;
+    tableConfig.Columns.forEach((columnConfig, i) => {
+      const fontSize = columnConfig.FontSize ?? tableConfig.HeaderFontSize;
 
       this.pdf.setFontSize(fontSize);
-      this.pdf.setTextColor(columnConfig.TextColor ?? config.HeaderTextColor);
+      this.pdf.setTextColor(columnConfig.TextColor ?? tableConfig.HeaderTextColor);
 
       if (columnConfig.Text) {
         const colX = x + columnConfig.Width / 2;
@@ -97,14 +101,14 @@ export class ComponentsBuilder {
       x += columnConfig.Width;
 
       if (columnConfig.DividerLine) {
-        this.pdf.setDrawColor(config.DividerLineColour);
+        this.pdf.setDrawColor(tableConfig.DividerLineColour);
         this.pdf.line(x, y - (fontSize / 2), x, y + 6);
       }
     });
 
-    if (config.UnderlineHeaders) {
-      this.pdf.setDrawColor(config.DividerLineColour);
-      this.pdf.line(startX, y + 6, this.cfg.pageWidth - this.cfg.margin, y + 6);
+    if (tableConfig.UnderlineHeaders) {
+      this.pdf.setDrawColor(tableConfig.DividerLineColour);
+      this.pdf.line(startX, y + 6, startX + tableConfig.Length, y + 6);
     }
   };
 
@@ -116,6 +120,7 @@ export class ComponentsBuilder {
       const rowY = y + (tableConfig.RowHeight * i) + (tableConfig.DividerLineWidth * i);
       const centerRowY = rowY + (tableConfig.RowHeight / 2);
 
+      // Draw row background color
       if (rowConfig.BackgroundColor) {
         this.pdf.setFillColor(...rowConfig.BackgroundColor);
         this.pdf.rect(x, rowY, tableConfig.Length, tableConfig.RowHeight, 'F');
@@ -124,7 +129,7 @@ export class ComponentsBuilder {
       // Horizontal divider line
       if (tableConfig.RowDividerLine) {
         this.pdf.setDrawColor(tableConfig.DividerLineColour);
-        this.pdf.line(x, rowY + tableConfig.RowHeight, this.cfg.pageWidth - this.cfg.margin, rowY + tableConfig.RowHeight);
+        this.pdf.line(x, rowY + tableConfig.RowHeight, x + tableConfig.Length, rowY + tableConfig.RowHeight);
       }
 
       for (let j = 0; j < tableConfig.Columns.length; j++) {
@@ -147,13 +152,13 @@ export class ComponentsBuilder {
     this.pdf.setFont("helvetica", "normal");
     this.pdf.setFontSize(fontSize);
 
-    x = x - this.helper.sum(items.map(item => this.pdf.getTextWidth(item.text))) - ((items.length - 1) * 10);
+    x = x - this.helper.sum(items.map(item => this.pdf.getTextWidth(item.text))) - ((items.length - 1) * ((fontSize - 5) * 2));
 
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       this.drawText(x, y, item.pageNumber, item.text, fontSize, item.link)
 
-      x += this.pdf.getTextWidth(item.text) + 5;
+      x += this.pdf.getTextWidth(item.text) + (fontSize - 5);
 
       if (i < items.length - 1) {
         // Not last item, draw separator
@@ -163,7 +168,7 @@ export class ComponentsBuilder {
         this.pdf.line(x, y + 2, x, y - fontSize);
         this.pdf.setLineWidth(lineWidth);
 
-        x += 5;
+        x += (fontSize - 5);
       }
     }
   }
