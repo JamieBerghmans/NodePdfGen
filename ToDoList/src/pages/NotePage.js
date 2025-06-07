@@ -2,13 +2,13 @@ import { pdf, cfg, componentsBuilder } from "../shared/Shared.js";
 
 export class NotePage {
 
-    build(index, title, titleBold, subtitle, background = true) {
+    build(index, homePage, title, titleBold, subtitle, background = true) {
         pdf.addPage();
 
         // Background
         if (background) {
             const height = subtitle ? 40 : 30;
-            pdf.setFillColor(...cfg.colors[(index ?? 0) % cfg.colors.length]);
+            pdf.setFillColor(...cfg.headerColors[(index ?? 0) % cfg.headerColors.length]);
             pdf.rect(cfg.margin - 10, cfg.margin - 20, 200, height, 'F');
         }
 
@@ -16,25 +16,20 @@ export class NotePage {
         pdf.setTextColor(0);
         componentsBuilder.drawPageHeader(cfg.margin, cfg.margin, title, titleBold, subtitle);
 
+        // Draw buttons
+        let buttons = [
+            { text: "Home", pageNumber: homePage, link: true },
+        ];
+        if (index >= 0) {
+            buttons.push(
+                { text: "Subtasks", pageNumber: homePage + (index + 2) + cfg.taskCount, link: true }
+            );
+        }
+        componentsBuilder.drawMenu(cfg.pageWidth - cfg.margin, cfg.margin - 2, buttons, 10)
+
         // Lines
         pdf.setDrawColor(cfg.grey);
         for (let y = 100; y < cfg.pageHeight - cfg.margin; y += 20)
             pdf.line(cfg.margin, y, cfg.pageWidth - cfg.margin, y);
-
-        const buttonStartX = index ? cfg.pageWidth - cfg.margin - 80 : cfg.pageWidth - cfg.margin - 20;
-
-        // Home button
-        componentsBuilder.drawText(buttonStartX, cfg.margin - 2, 1, "Home", 10, true);
-        
-        if (index) {
-            // Divider
-            componentsBuilder.drawDivider(cfg.pageWidth - cfg.margin - 48, cfg.margin - 12, 14, 1, 0);
-
-            // Subtasks button
-            componentsBuilder.drawText(cfg.pageWidth - cfg.margin - 43, cfg.margin - 2, index + 21, "Subtasks", 10, true);
-        
-            // Home button
-            componentsBuilder.drawText(cfg.pageWidth - cfg.margin - 20, cfg.margin - 2, 1, "Home", 10, true);
-        }
     }
 }

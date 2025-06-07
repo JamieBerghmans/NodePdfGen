@@ -13,14 +13,21 @@ class Shared {
         rowHeight: 28,
         taskCount: 18,
         subTaskCount: 17,
-        grey: 150,
-        colors: [
+        sectionCount: 3,
+        grey: 50,
+        black: 0,
+        white: 255,
+        rowColors: [
+          [255, 255, 255],
+          [207, 243, 250]
+        ],
+        headerColors: [
           [255, 210, 218], [255, 225, 200], [255, 250, 180], [210, 255, 210], [200, 255, 250],
           [210, 235, 255], [225, 210, 255], [235, 210, 255], [245, 210, 255], [255, 210, 245]
-        ]
+        ],
       };
-      this.componentsBuilder = new ComponentsBuilder(this.pdf, this.cfg);
       this.helper = new Helper();
+      this.componentsBuilder = new ComponentsBuilder(this.pdf, this.cfg, this.helper);
       Shared.instance = this;
     }
     return Shared.instance;

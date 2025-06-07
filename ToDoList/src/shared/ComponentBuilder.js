@@ -1,7 +1,8 @@
 export class ComponentsBuilder {
-  constructor(pdf, cfg) {
+  constructor(pdf, cfg, helper) {
     this.pdf = pdf;
     this.cfg = cfg;
+    this.helper = helper;
   }
 
   drawPriority = (x, centerY, spacing = 15) => {
@@ -9,7 +10,6 @@ export class ComponentsBuilder {
       const cx = x + 8 + j * spacing;
       this.pdf.circle(cx, centerY, 6, 'S');
       this.pdf.setFontSize(5);
-      this.pdf.setTextColor(this.cfg.grey);
       this.pdf.text(label, cx, centerY + 1.5, { align: 'center' });
     });
   }
@@ -19,8 +19,6 @@ export class ComponentsBuilder {
     const barH = 10;
     const barX = x;
     const barY = centerY - barH / 2;
-    this.pdf.setDrawColor(this.cfg.grey);
-    this.pdf.setFillColor(230);
     this.pdf.roundedRect(barX, barY, barW, barH, 3, 3, 'S');
     for (let j = 1; j < 4; j++) this.pdf.line(barX + j * (barW / 4), barY, barX + j * (barW / 4), barY + barH);
   }
@@ -74,7 +72,7 @@ export class ComponentsBuilder {
       this.pdf.setFont("helvetica", "normal");
       this.pdf.text(titleBold, x + width, y);
     }
-    
+
     if (subtitle) {
       this.pdf.setFont("helvetica", "normal");
       this.pdf.setFontSize(10);
@@ -82,38 +80,91 @@ export class ComponentsBuilder {
     }
   };
 
-  drawTableHeaders = (startX, y, headers, colWidths) => {
-    this.pdf.setFontSize(10);
-    this.pdf.setTextColor(0);
+  drawTableHeaders = (startX, y, config) => {
+    if (!config.IncludeHeaders) return;
+
     let x = startX;
-    headers.forEach((text, i) => {
-      if (text) {
-        const colX = x + colWidths[i] / 2;
-        this.pdf.text(text, colX, y, { align: "center" });
+    config.Columns.forEach((columnConfig, i) => {
+      const fontSize = columnConfig.FontSize ?? config.HeaderFontSize;
+
+      this.pdf.setFontSize(fontSize);
+      this.pdf.setTextColor(columnConfig.TextColor ?? config.HeaderTextColor);
+
+      if (columnConfig.Text) {
+        const colX = x + columnConfig.Width / 2;
+        this.pdf.text(columnConfig.Text, colX, y, { align: "center" });
       }
-      x += colWidths[i];
+      x += columnConfig.Width;
+
+      if (columnConfig.DividerLine) {
+        this.pdf.setDrawColor(config.DividerLineColour);
+        this.pdf.line(x, y - (fontSize / 2), x, y + 6);
+      }
     });
-    this.pdf.setDrawColor(this.cfg.grey);
-    this.pdf.line(startX, y + 6, this.cfg.pageWidth - this.cfg.margin, y + 6);
-  };
 
-  drawRow = (index, x, y, callback, background = false) => {
-    const centerY = y - this.cfg.rowHeight / 2;
-    const color = this.cfg.colors[Math.floor(index / 2) % this.cfg.colors.length];
-
-    if (index % 2 === 1 && background) {
-      this.pdf.setFillColor(...color);
-      this.pdf.rect(this.cfg.margin, y - this.cfg.rowHeight, this.cfg.pageWidth - 2 * this.cfg.margin, this.cfg.rowHeight, 'F');
+    if (config.UnderlineHeaders) {
+      this.pdf.setDrawColor(config.DividerLineColour);
+      this.pdf.line(startX, y + 6, this.cfg.pageWidth - this.cfg.margin, y + 6);
     }
-
-    callback(centerY);
   };
 
-  drawDivider = (x, y, height, width = 0.1, color = this.cfg.grey) => {
-    const lineWidth = this.pdf.getLineWidth();
-    this.pdf.setLineWidth(width);
-    this.pdf.setDrawColor(color);
-    this.pdf.line(x, y, x, y + height);
-    this.pdf.setLineWidth(lineWidth);
+  drawTable = (x, y, tableConfig, callback) => {
+    this.drawTableHeaders(x, y, tableConfig);
+    y = y + 6 + tableConfig.DividerLineWidth; // Adjust y position after headers
+    for (let i = 0; i < tableConfig.RowCount; i++) {
+      var rowConfig = tableConfig.Rows[i % tableConfig.Rows.length];
+      const rowY = y + (tableConfig.RowHeight * i) + (tableConfig.DividerLineWidth * i);
+      const centerRowY = rowY + (tableConfig.RowHeight / 2);
+
+      if (rowConfig.BackgroundColor) {
+        this.pdf.setFillColor(...rowConfig.BackgroundColor);
+        this.pdf.rect(x, rowY, tableConfig.Length, tableConfig.RowHeight, 'F');
+      }
+
+      // Horizontal divider line
+      if (tableConfig.RowDividerLine) {
+        this.pdf.setDrawColor(tableConfig.DividerLineColour);
+        this.pdf.line(x, rowY + tableConfig.RowHeight, this.cfg.pageWidth - this.cfg.margin, rowY + tableConfig.RowHeight);
+      }
+
+      for (let j = 0; j < tableConfig.Columns.length; j++) {
+        const columnConfig = tableConfig.Columns[j];
+        const columnBegin = x + this.helper.sum(tableConfig.Columns.map(c => c.Width).slice(0, j));
+        const columnEnd = x + this.helper.sum(tableConfig.Columns.map(c => c.Width).slice(0, j+1));
+
+        // Vertical divider line
+        if (columnConfig.DividerLine) {
+          this.pdf.setDrawColor(tableConfig.DividerLineColour);
+          this.pdf.line(columnEnd, rowY, columnEnd, rowY + tableConfig.RowHeight);
+        }
+
+        callback(i, j, columnBegin, columnEnd, rowY, centerRowY, rowY + tableConfig.RowHeight);
+      }
+    }
+  }
+
+  drawMenu(x, y, items, fontSize = 10) {
+    this.pdf.setFont("helvetica", "normal");
+    this.pdf.setFontSize(fontSize);
+
+    x = x - this.helper.sum(items.map(item => this.pdf.getTextWidth(item.text))) - ((items.length - 1) * 10);
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      this.drawText(x, y, item.pageNumber, item.text, fontSize, item.link)
+
+      x += this.pdf.getTextWidth(item.text) + 5;
+
+      if (i < items.length - 1) {
+        // Not last item, draw separator
+        const lineWidth = this.pdf.getLineWidth();
+        this.pdf.setLineWidth(1);
+        this.pdf.setDrawColor(0);
+        this.pdf.line(x, y + 2, x, y - fontSize);
+        this.pdf.setLineWidth(lineWidth);
+
+        x += 5;
+      }
+    }
   }
 }
