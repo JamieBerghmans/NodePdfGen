@@ -12,9 +12,9 @@ export class SubTasksPage {
         pdf.rect(cfg.marginLeft + 5, cfg.marginTop - 10, 200, height, 'F');
 
         pdf.setTextColor(0);
-        componentsBuilder.drawPageHeader(cfg.marginLeft + 10, cfg.marginTop + 10, "Sub Task ", "Triage", `Task #${(index + 1) + (sectionIndex * cfg.taskCount)}`);
+        componentsBuilder.drawPageHeader(cfg.marginLeft + 15, cfg.marginTop + 10, "Sub Task ", "Triage", `Task #${(index + 1) + (sectionIndex * cfg.taskCount)}`);
         
-        componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight, cfg.marginTop + 10, [
+        componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight - 30, cfg.marginTop + 10, [
             { text: "Home", pageNumber: homePage, link: true },
             { text: "Notes", pageNumber: homePage + 1 + index + 1, link: true }
         ], 15)
@@ -23,7 +23,7 @@ export class SubTasksPage {
         tableConfig.Length = cfg.pageWidth - cfg.marginLeft - cfg.marginRight;
         tableConfig.Columns = [
             {
-                Width: 240,
+                Width: 249,
                 Text: 'Sub Task Description'
             },
             {

@@ -8,7 +8,7 @@ export class HomePage {
             pdf.addPage();
         }
 
-        componentsBuilder.drawPageHeader(cfg.marginLeft + 15, cfg.marginTop + 10, "To Do ", "List");
+        componentsBuilder.drawPageHeader(cfg.marginLeft + 20, cfg.marginTop + 10, "To Do ", "List");
 
         // === Buttons ===
         const buttons = [];
@@ -20,13 +20,13 @@ export class HomePage {
             buttons.push({ text: "Next", pageNumber: homePage + pagesPerSection, link: true });
         }
 
-        componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight - 30, cfg.marginTop + 10, buttons, 15)
+        componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight, cfg.marginTop + 10, buttons, 15)
 
         const tableConfig = new TableConfig();
         tableConfig.Length = cfg.pageWidth - cfg.marginLeft - cfg.marginRight;
         tableConfig.Columns = [
             {
-                Width: 212,
+                Width: 202,
                 DividerLine: true,
                 Text: 'Task',
             },
