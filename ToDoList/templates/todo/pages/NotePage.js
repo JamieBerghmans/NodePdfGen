@@ -1,4 +1,4 @@
-import { pdf, cfg, componentsBuilder } from "../../../shared/Shared.js";
+import { pdf, cfg, componentsBuilder } from "../Shared.js";
 
 export class NotePage {
 

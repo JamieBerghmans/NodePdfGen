@@ -87,6 +87,10 @@ export class ComponentsBuilder {
   drawTableHeaders = (startX, y, tableConfig) => {
     if (!tableConfig.IncludeHeaders) return;
 
+    if (tableConfig.HeaderBold) {
+      this.pdf.setFont("helvetica", "bold");
+    }
+
     let x = startX;
     tableConfig.Columns.forEach((columnConfig, i) => {
       const fontSize = columnConfig.FontSize ?? tableConfig.HeaderFontSize;
@@ -102,14 +106,21 @@ export class ComponentsBuilder {
 
       if (columnConfig.DividerLine) {
         this.pdf.setDrawColor(tableConfig.DividerLineColour);
-        this.pdf.line(x, y - (fontSize / 2), x, y + 6);
+        this.pdf.line(x, y - (fontSize / 2) - (tableConfig.HeaderFontSize ? fontSize : 0), x, y + 6);
       }
     });
+
+    if (tableConfig.OverlineHeaders) {
+      this.pdf.setDrawColor(tableConfig.DividerLineColour);
+      this.pdf.line(startX, y - tableConfig.HeaderFontSize - (tableConfig.HeaderFontSize / 2), startX + tableConfig.Length, y - tableConfig.HeaderFontSize - (tableConfig.HeaderFontSize / 2));
+    }
 
     if (tableConfig.UnderlineHeaders) {
       this.pdf.setDrawColor(tableConfig.DividerLineColour);
       this.pdf.line(startX, y + 6, startX + tableConfig.Length, y + 6);
     }
+
+    this.pdf.setFont("helvetica", "normal");
   };
 
   drawTable = (x, y, tableConfig, callback) => {
@@ -140,7 +151,7 @@ export class ComponentsBuilder {
         // Vertical divider line
         if (columnConfig.DividerLine) {
           this.pdf.setDrawColor(tableConfig.DividerLineColour);
-          this.pdf.line(columnEnd, rowY, columnEnd, rowY + tableConfig.RowHeight);
+          this.pdf.line(columnEnd, rowY, columnEnd, rowY + tableConfig.RowHeight + tableConfig.DividerLineWidth);
         }
 
         callback(i, j, columnBegin, columnEnd, rowY, centerRowY, rowY + tableConfig.RowHeight);

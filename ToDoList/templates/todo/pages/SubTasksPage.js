@@ -1,4 +1,4 @@
-import { pdf, cfg, componentsBuilder, helper } from '../../../shared/Shared.js';
+import { pdf, cfg, componentsBuilder, helper } from '../Shared.js';
 import { TableConfig } from '../../../shared/TableConfig.js';
 
 export class SubTasksPage {

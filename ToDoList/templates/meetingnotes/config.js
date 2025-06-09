@@ -1,124 +1,104 @@
-export class Config {
-
-    // singleton constructor
-    constructor() {
-        this.cfg = {
-            // Pdf settings
-            pageWidth: 460,
-            pageHeight: 595,
-            marginTop: 20,
-            marginRight: 5,
-            marginBottom: 20,
-            marginLeft: 35,
-
-            // Colors
-            grey: 50,
-            black: 0,
-            white: 255,
-            colors:[
-                { color: [230, 229, 227], text: cfg.black },  // Light Grey #E6E5E3
-                { color: [206, 227, 230], text: cfg.black },  // Light Blue #CEE3E6
-                { color: [176, 217, 225], text: cfg.black },  // Sky Blue #B0D9E1
-                { color: [149, 211, 224], text: cfg.black },  // Light Sky Blue #95D3E0
-                { color: [123, 204, 221], text: cfg.black },  // Deep Sky Blue #7BCCDD
-                { color: [69, 194, 219], text: cfg.white },   // Dodger Blue #45C2DB
-                { color: [64, 174, 204], text: cfg.white },   // Steel Blue #40AECC
-                { color: [69, 160, 190], text: cfg.white },   // Blue #45A0BE
-                { color: [55, 135, 170], text: cfg.white },   // Medium Blue #3787AA
-                { color: [45, 96, 141], text: cfg.white }     // Dark Blue #2D608D
-            ],
-
-            // Text field height
-            rowHeight: 28,
-
-            // Side bar
-            sectionCount: colors.length,
-            sidebarWidth: 20,
-            sidebarRounding: 5,
-            sidebarItemOverlap: 10,
-            sidebarItemHeight: (pageHeight - marginTop - marginBottom) / colors.length + sidebarItemOverlap,
-        }
-    }
-}
-
-export default new Config();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { jsPDF } from 'jspdf';
-import { ComponentsBuilder } from './ComponentBuilder.js';
-import { Helper } from './Helper.js';
+import { ComponentsBuilder } from '../../shared/ComponentBuilder.js';
+import { Helper } from '../../shared/Helper.js';
 
-class Shared {
+class Config {
   constructor() {
-    if (!Shared.instance) {
+    if (!Config.instance) {
+      // Pdf settings
+      const pageWidth = 460;
+      const pageHeight = 595;
+      const marginTop = 20;
+      const marginRight = 5;
+      const marginBottom = 20;
+      const marginLeft = 35;
+
+      // Colors
+      const grey = 50;
+      const black = 0;
+      const white = 255;
+      const colors = [
+        { color: [230, 229, 227], text: black },  // Light Grey #E6E5E3
+        { color: [206, 227, 230], text: black },  // Light Blue #CEE3E6
+        { color: [176, 217, 225], text: black },  // Sky Blue #B0D9E1
+        { color: [149, 211, 224], text: black },  // Light Sky Blue #95D3E0
+        { color: [123, 204, 221], text: black },  // Deep Sky Blue #7BCCDD
+        { color: [69, 194, 219], text: white },   // Dodger Blue #45C2DB
+        { color: [64, 174, 204], text: white },   // Steel Blue #40AECC
+        { color: [69, 160, 190], text: white },   // Blue #45A0BE
+        { color: [55, 135, 170], text: white },   // Medium Blue #3787AA
+        { color: [45, 96, 141], text: white }     // Dark Blue #2D608D
+      ];
+
+      // Side bar
+      const sidebarWidth = 20;
+      const sidebarItemRounding = 5;
+      const sidebarItemOverlap = 10;
+      const sidebarOffsetTop = 10;
+      const sidebarItemHeight = (pageHeight - marginTop - marginBottom - sidebarOffsetTop) / colors.length + sidebarItemOverlap;
+
+      // Other settings
+      const rowHeight = 28;
+      const sectionCount = colors.length;
+      const meetingCountPerPage = 18;
+      const usableWidth = pageWidth - marginLeft - marginRight - sidebarWidth - 10;
+
+      // Functions
+      const dynamicWidth = (percentage) => usableWidth / 100 * percentage;
+
       this.cfg = {
-        pageWidth: 460,
-        pageHeight: 595,
-        marginTop: 20,
-        marginRight: 5,
-        marginBottom: 20,
-        marginLeft: 35,
-        rowHeight: 28,
-        taskCount: 18,
-        subTaskCount: 17,
-        sectionCount: 3,
-        grey: 50,
-        black: 0,
-        white: 255,
-        rowColors: [
-          [255, 255, 255],
-          [109, 215, 237]
-        ],
-        headerColors: [
-          [255, 99, 71],
-          [255, 165, 0],
-          [50, 205, 50],
-          [0, 255, 255],
-          [0, 191, 255],
-          [138, 43, 226],
-          [255, 20, 147],
-          [240, 230, 140],
-          [255, 105, 180],
-          [127, 255, 0]
-        ],
+        // Pdf settings
+        pageWidth,
+        pageHeight,
+        marginTop,
+        marginRight,
+        marginBottom,
+        marginLeft,
+
+        // Colors
+        grey,
+        black,
+        white,
+        colors,
+
+        // Side bar
+        sidebarWidth,
+        sidebarItemRounding,
+        sidebarItemOverlap,
+        sidebarOffsetTop,
+        sidebarItemHeight,
+
+        // Other settings
+        rowHeight,
+        sectionCount,
+        meetingCountPerPage,
+        usableWidth,
+
+        // Functions
+        dynamicWidth
       };
 
       this.pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'pt',
-        format: [this.cfg.pageWidth, this.cfg.pageHeight],
+        format: [pageWidth, pageHeight],
         putOnlyUsedFonts: true,
         floatPrecision: 16 // Default is 16, but can be set to a lower value for performance
       });
 
       this.helper = new Helper();
       this.componentsBuilder = new ComponentsBuilder(this.pdf, this.cfg, this.helper);
-      Shared.instance = this;
+      Config.instance = this;
     }
-    return Shared.instance;
+
+    return Config.instance;
   }
 }
 
-const instance = new Shared();
+const instance = new Config();
 Object.freeze(instance);
 
 export const cfg = instance.cfg;
-export const pdf =  instance.pdf;
+export const pdf = instance.pdf;
 export const componentsBuilder = instance.componentsBuilder;
 export const helper = instance.helper;

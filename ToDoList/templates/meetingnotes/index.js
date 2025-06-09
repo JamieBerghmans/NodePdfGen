@@ -1,44 +1,52 @@
 import open from "open";
-import { cfg } from "./config.js";
+import { cfg, pdf } from "./Config.js";
+import { MeetingListPage } from "./pages/MeetingListPage.js";
+import { MeetingNotesPage } from "./pages/MeetingNotesPage.js";
 
-this.pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'pt',
-                format: [this.cfg.pageWidth, this.cfg.pageHeight],
-                putOnlyUsedFonts: true,
-                floatPrecision: 16 // Default is 16, but can be set to a lower value for performance
-            });
+const pagesPerSection = 1 + cfg.meetingCountPerPage;
 
-// Draw rectangles for each color
-for (let i = 0; i < cfg. ; i++) {
-colors.forEach((color, index) => {
-    const y = cfg.marginTop + ((rectangleHeight - 10) * index);
-    pdf.setFillColor(...color.color);
-    pdf.roundedRect(cfg.pageWidth - cfg.marginRight - rectWidth, y, rectWidth, rectangleHeight, rectRounding, rectRounding, 'F')
+const drawSideBar = () => {
+    // Draw rectangles on each tab for each color
+    for (let i = 0; i < cfg.sectionCount; i++) {
+        const color = cfg.colors[i];
 
-    pdf.setTextColor(color.text);
-    pdf.setFontSize(10);
-    
-    // Rotate text
-    pdf.text(`${index + 1}`, cfg.pageWidth - cfg.marginRight - 13, y + (rectangleHeight / 2) - 6, { align: "left", angle: -90 });
-});
+        const currentFillColor = pdf.getFillColor();
+        const currentTextColor = pdf.getTextColor();
+        const currentFontSize = pdf.getFontSize();
 
-// const pagesPerSection = 2 + (cfg.taskCount * 2); // 2 sections = Notes + Subtasks
+        const y = cfg.marginTop + ((cfg.sidebarItemHeight - cfg.sidebarItemOverlap) * i);
+        pdf.setFillColor(...color.color);
+        pdf.roundedRect(cfg.pageWidth - cfg.marginRight - cfg.sidebarWidth, y + cfg.sidebarOffsetTop, cfg.sidebarWidth, cfg.sidebarItemHeight, cfg.sidebarItemRounding, cfg.sidebarItemRounding, 'F')
 
-// for (let i = 0; i < cfg.sectionCount; i++) {
-//     const homePage = 1 + (i * pagesPerSection);
+        pdf.setTextColor(color.text);
+        pdf.setFontSize(10);
+        
+        // Rotate text
+        pdf.text(`${i + 1}`, cfg.pageWidth - cfg.marginRight - 13, y + cfg.sidebarOffsetTop + (cfg.sidebarItemHeight / 2) - 6, { align: "left", angle: -90 });
 
-//     mainPage.build(i, homePage, pagesPerSection);
+        // Apply link
+        pdf.link(cfg.pageWidth - cfg.marginRight - cfg.sidebarWidth, y + cfg.sidebarOffsetTop, cfg.sidebarWidth, cfg.sidebarItemHeight, { pageNumber: 1 + (i * pagesPerSection) });
 
-//     notePage.build(-1, homePage, "To Do ", "Notes", undefined, false);
-//     for (let j = 0; j < cfg.taskCount; j++) {
-//         notePage.build(j, homePage, 'Notes', undefined, `Task #${(j + 1) + (i * cfg.taskCount)}`);
-//     }
+        // Reset text color, font size, and fill color
+        pdf.setFillColor(currentFillColor);
+        pdf.setTextColor(currentTextColor);
+        pdf.setFontSize(currentFontSize);
+    }
+}
 
-//     for (let j = 0; j < cfg.taskCount; j++) {
-//         subTasksPage.build(j, i, homePage);
-//     }
-// }
+const meetingListPage = new MeetingListPage();
+const meetingNotesPage = new MeetingNotesPage();
+
+for (let i = 0; i < cfg.sectionCount; i++) {
+    const homePage = 1 + (i * pagesPerSection);
+    meetingListPage.build(i, homePage, pagesPerSection);
+    drawSideBar();
+
+    for (let j = 0; j < cfg.meetingCountPerPage; j++) {
+        meetingNotesPage.build(i, j, homePage, pagesPerSection);
+        drawSideBar();
+    }
+}
 
 pdf.save("templates/meetingnotes/Meeting Notes Template.pdf");
 open("templates/meetingnotes/Meeting Notes Template.pdf");

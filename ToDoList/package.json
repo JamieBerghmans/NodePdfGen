@@ -4,7 +4,8 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "todo": "node templates/todo/index.js"
+    "todo": "node templates/todo/index.js",
+    "meetingnotes": "node templates/meetingnotes/index.js"
   },
   "dependencies": {
     "jspdf": "^2.5.1",

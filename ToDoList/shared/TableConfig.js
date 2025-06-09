@@ -2,8 +2,10 @@ export class TableConfig {
     Length = 50;
     IncludeHeaders = true;
     UnderlineHeaders = true;
+    OverlineHeaders = false;
     HeaderFontSize = 10;
     HeaderTextColor = 10;
+    HeaderBold = false;
     Columns = [
         {
             FontSize: 10,

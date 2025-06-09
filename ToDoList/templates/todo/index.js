@@ -2,11 +2,11 @@ import open from "open";
 import { HomePage } from "./pages/HomePage.js";
 import { NotePage } from "./pages/NotePage.js";
 import { SubTasksPage } from "./pages/SubTasksPage.js";
-import { cfg, pdf } from "../../shared/Shared.js";
+import { cfg, pdf } from "./Shared.js";
 
-const mainPage = new HomePage(pdf, cfg);
-const notePage = new NotePage(pdf, cfg);
-const subTasksPage = new SubTasksPage(pdf, cfg);
+const mainPage = new HomePage();
+const notePage = new NotePage();
+const subTasksPage = new SubTasksPage();
 
 const pagesPerSection = 2 + (cfg.taskCount * 2); // 2 sections = Notes + Subtasks
 

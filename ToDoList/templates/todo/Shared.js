@@ -1,6 +1,6 @@
 import { jsPDF } from 'jspdf';
-import { ComponentsBuilder } from './ComponentBuilder.js';
-import { Helper } from './Helper.js';
+import { ComponentsBuilder } from '../../shared/ComponentBuilder.js';
+import { Helper } from '../../shared/Helper.js';
 
 class Shared {
   constructor() {
