@@ -67,21 +67,23 @@ export class ComponentsBuilder {
     }
   }
 
-  drawPageHeader = (x, y, title, titleBold = undefined, subtitle = undefined) => {
-    this.pdf.setFont("helvetica", "bold");
-    this.pdf.setFontSize(18);
+  drawPageHeader = (x, y, title, titleBold = undefined, subtitle = undefined, font = undefined, fontSizeTitle = 18, fontSizeSubtitle = 10) => {
+    this.pdf.setFont(font ?? "helvetica", "bold");
+    this.pdf.setFontSize(fontSizeTitle);
     this.pdf.text(title, x, y);
     if (titleBold) {
       const width = this.pdf.getTextWidth(title);
-      this.pdf.setFont("helvetica", "normal");
+      this.pdf.setFont(font ?? "helvetica", "normal");
       this.pdf.text(titleBold, x + width, y);
     }
 
     if (subtitle) {
-      this.pdf.setFont("helvetica", "normal");
-      this.pdf.setFontSize(10);
+      this.pdf.setFont(font ?? "helvetica", "normal");
+      this.pdf.setFontSize(fontSizeSubtitle);
       this.pdf.text(subtitle, x, y + 12);
     }
+
+    this.pdf.setFont("helvetica", "normal");
   };
 
   drawTableHeaders = (startX, y, tableConfig) => {
