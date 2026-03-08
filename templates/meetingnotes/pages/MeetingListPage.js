@@ -1,4 +1,4 @@
-import { pdf, cfg, componentsBuilder, helper } from '../../meetingnotes/Config.js';
+import { pdf, cfg, componentsBuilder, helper } from '../Config.js';
 import { TableConfig } from '../../../shared/TableConfig.js';
 
 export class MeetingListPage {
@@ -8,6 +8,8 @@ export class MeetingListPage {
             pdf.addPage();
         }
 
+        pdf.setLineWidth(0.1);
+        pdf.setLineDashPattern([], 0);
         pdf.setTextColor(cfg.colors[sectionIndex].text);
         pdf.setFillColor(...cfg.colors[sectionIndex].color);
         pdf.rect(cfg.marginLeft, cfg.marginTop - 8, 250, 26, 'F');
@@ -17,10 +19,10 @@ export class MeetingListPage {
         // === Buttons ===
         const buttons = [];
         if (homePage > 1) {
-            buttons.push({ text: "Previous", pageNumber: homePage - pagesPerSection, link: true });
+            buttons.push({ text: cfg.labels.buttons.previous, pageNumber: homePage - pagesPerSection, link: true });
         }
         if (sectionIndex < cfg.sectionCount - 1) {
-            buttons.push({ text: "Next", pageNumber: homePage + pagesPerSection, link: true });
+            buttons.push({ text: cfg.labels.buttons.next, pageNumber: homePage + pagesPerSection, link: true });
         }
         componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight - cfg.sidebarWidth - 20, cfg.marginTop + 10, buttons, 15)
 
@@ -32,16 +34,16 @@ export class MeetingListPage {
             {
                 Width: cfg.dynamicWidth(8),
                 DividerLine: true,
-                Text: '#',
+                Text: cfg.labels.columns.number,
             },
             {
                 Width: cfg.dynamicWidth(65),
                 DividerLine: true,
-                Text: 'Meeting'
+                Text: cfg.labels.columns.meeting
             },
             {
                 Width: cfg.dynamicWidth(27),
-                Text: 'Date'
+                Text: cfg.labels.columns.date
             }
         ];
         tableConfig.RowCount = cfg.meetingCountPerPage;
@@ -70,8 +72,8 @@ export class MeetingListPage {
                 // Set the position and size for the circle
                 pdf.setLineWidth(1);
                 const circleX = xTrailing - 15; // X-coordinate of the circle's center
-                const circleY = yCenter; // Y-coordinate of the circle's center
-                const circleRadius = 8; // Radius of the circle
+                const circleY = yCenter;         // Y-coordinate of the circle's center
+                const circleRadius = 8;          // Radius of the circle
 
                 // Draw the circle
                 pdf.setFillColor(cfg.black)
@@ -79,13 +81,13 @@ export class MeetingListPage {
                 pdf.setFillColor(cfg.white);
                 pdf.circle(circleX, circleY, circleRadius - 2, 'F');
                 pdf.setFillColor(cfg.black);
-                
+
                 // Set the position for the arrow
                 pdf.setDrawColor(cfg.black);
                 const arrowStartX = circleX - 3; // Start X-coordinate of the arrow
-                const arrowStartY = circleY; // Start Y-coordinate of the arrow
-                const arrowEndX = circleX + 4; // End X-coordinate of the arrow
-                const arrowEndY = circleY; // End Y-coordinate of the arrow
+                const arrowStartY = circleY;      // Start Y-coordinate of the arrow
+                const arrowEndX = circleX + 4;   // End X-coordinate of the arrow
+                const arrowEndY = circleY;        // End Y-coordinate of the arrow
 
                 // Draw the arrow line
                 pdf.setLineWidth(1.5);

@@ -1,0 +1,18 @@
+{
+    "months": [
+        "Januari", "Februari", "Maart", "April", "Mei", "Juni",
+        "Juli", "Augustus", "September", "Oktober", "November", "December"
+    ],
+    "affirmations": "Positieve affirmaties",
+    "future": "Ik kijk uit naar...",
+    "breakfast": "Ontbijt",
+    "lunch": "Lunch",
+    "dinner": "Diner",
+    "delicious": "Het smaakt!",
+    "people": "Mensen positief beïnvloed",
+    "gratefulFor": "Ik ben dankbaar voor...",
+    "buttons": {
+        "previousDay": "Vorige dag",
+        "nextDay": "Volgende dag"
+    }
+}

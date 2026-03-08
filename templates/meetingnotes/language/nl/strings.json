@@ -1,0 +1,28 @@
+{
+    "summaryPageTitle": "Vergadering ",
+    "summaryPageTitleBold": "Samenvatting",
+    "meetingLabel": "Vergadering",
+    "columns": {
+        "number": "#",
+        "meeting": "Vergadering",
+        "date": "Datum",
+        "actionItem": "Actiepunt",
+        "owner": "Eigenaar",
+        "due": "Deadline"
+    },
+    "fields": {
+        "meetingName": "Naam vergadering:",
+        "date": "Datum:",
+        "objective": "Doel:",
+        "time": "Tijd:",
+        "location": "Locatie:"
+    },
+    "sections": {
+        "meetingNotes": "VERGADERNOTITIES"
+    },
+    "buttons": {
+        "previous": "Vorige",
+        "next": "Volgende",
+        "back": "Terug"
+    }
+}

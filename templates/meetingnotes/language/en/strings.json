@@ -1,0 +1,28 @@
+{
+    "summaryPageTitle": "Meeting ",
+    "summaryPageTitleBold": "Summary",
+    "meetingLabel": "Meeting",
+    "columns": {
+        "number": "#",
+        "meeting": "Meeting",
+        "date": "Date",
+        "actionItem": "Action item",
+        "owner": "Owner",
+        "due": "Due"
+    },
+    "fields": {
+        "meetingName": "Meeting name:",
+        "date": "Date:",
+        "objective": "Objective:",
+        "time": "Time:",
+        "location": "Location:"
+    },
+    "sections": {
+        "meetingNotes": "MEETING NOTES"
+    },
+    "buttons": {
+        "previous": "Previous",
+        "next": "Next",
+        "back": "Back"
+    }
+}

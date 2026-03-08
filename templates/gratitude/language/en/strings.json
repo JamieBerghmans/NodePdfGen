@@ -1,0 +1,18 @@
+{
+    "months": [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ],
+    "affirmations": "Positive affirmations",
+    "future": "I look forward to...",
+    "breakfast": "Breakfast",
+    "lunch": "Lunch",
+    "dinner": "Dinner",
+    "delicious": "Delicious!",
+    "people": "People positively influenced",
+    "gratefulFor": "I am grateful for...",
+    "buttons": {
+        "previousDay": "Previous day",
+        "nextDay": "Next day"
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "summaryPageTitle": "Retrospective ",
+    "summaryPageTitleBold": "Summary",
+    "retroLabel": "Retro",
+    "columns": {
+        "number": "#",
+        "keywords": "Key words",
+        "date": "Date"
+    },
+    "sections": {
+        "positive": "Positive",
+        "neutral": "Neutral",
+        "negative": "Negative",
+        "meetingNotes": "MEETING NOTES"
+    },
+    "buttons": {
+        "previous": "Previous",
+        "next": "Next",
+        "back": "Back"
+    }
+}

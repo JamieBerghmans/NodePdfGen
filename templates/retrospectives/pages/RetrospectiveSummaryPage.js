@@ -6,10 +6,11 @@ export class RetrospectiveSummaryPage {
     build(sectionIndex, meetingIndex, homePage, pagesPerSection) {
         pdf.addPage();
 
-        componentsBuilder.drawPageHeader(cfg.marginLeft + 20, cfg.marginTop + 10, 'Retrospective ', 'Summary', `Retro ${26 + meetingIndex + 1 + (sectionIndex * cfg.meetingCountPerPage)}`);
+        const retroNumber = cfg.startSprint + meetingIndex + (sectionIndex * cfg.meetingCountPerPage);
+        componentsBuilder.drawPageHeader(cfg.marginLeft + 20, cfg.marginTop + 10, cfg.labels.summaryPageTitle, cfg.labels.summaryPageTitleBold, `${cfg.labels.retroLabel} ${retroNumber}`);
 
         // === Buttons ===
-        const buttons = [{ text: "Back", pageNumber: homePage, link: true }];
+        const buttons = [{ text: cfg.labels.buttons.back, pageNumber: homePage, link: true }];
         componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight - cfg.sidebarWidth - 20, cfg.marginTop + 10, buttons, 15)
 
         let x = cfg.marginLeft;
@@ -17,7 +18,7 @@ export class RetrospectiveSummaryPage {
         const lineSpacing = 25;
         const lineSpacingTop = 25;
 
-        pdf.text("Positive", x, y);
+        pdf.text(cfg.labels.sections.positive, x, y);
         for (let i = 0; i < 3; i++) {
             pdf.setLineWidth(0.8);
             pdf.setLineDashPattern([1, 2], 0);
@@ -28,7 +29,7 @@ export class RetrospectiveSummaryPage {
 
         y += 110;
 
-        pdf.text("Neutral", x, y);
+        pdf.text(cfg.labels.sections.neutral, x, y);
         for (let i = 0; i < 3; i++) {
             pdf.setLineWidth(0.8);
             pdf.setLineDashPattern([1, 2], 0);
@@ -39,7 +40,7 @@ export class RetrospectiveSummaryPage {
 
         y += 110;
 
-        pdf.text("Negative", x, y);
+        pdf.text(cfg.labels.sections.negative, x, y);
         for (let i = 0; i < 4; i++) {
             pdf.setLineWidth(0.8);
             pdf.setLineDashPattern([1, 2], 0);
@@ -49,7 +50,6 @@ export class RetrospectiveSummaryPage {
         }
 
         y += 100;
-        
 
         // === Meeting notes section ===
         {
@@ -68,7 +68,7 @@ export class RetrospectiveSummaryPage {
             meetingNotesTableConfig.Columns = [
                 {
                     Width: cfg.usableWidth,
-                    Text: 'MEETING NOTES',
+                    Text: cfg.labels.sections.meetingNotes,
                 },
             ];
             meetingNotesTableConfig.RowCount = 5;

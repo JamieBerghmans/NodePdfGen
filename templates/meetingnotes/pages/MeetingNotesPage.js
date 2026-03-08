@@ -1,4 +1,4 @@
-import { pdf, cfg, componentsBuilder, helper } from '../../meetingnotes/Config.js';
+import { pdf, cfg, componentsBuilder, helper } from '../Config.js';
 import { TableConfig } from '../../../shared/TableConfig.js';
 
 export class MeetingNotesPage {
@@ -6,10 +6,10 @@ export class MeetingNotesPage {
     build(sectionIndex, meetingIndex, homePage, pagesPerSection) {
         pdf.addPage();
 
-        componentsBuilder.drawPageHeader(cfg.marginLeft + 20, cfg.marginTop + 10, 'Meeting ', 'Summary', `Meeting ${meetingIndex + 1 + (sectionIndex * cfg.meetingCountPerPage)}`);
+        componentsBuilder.drawPageHeader(cfg.marginLeft + 20, cfg.marginTop + 10, cfg.labels.summaryPageTitle, cfg.labels.summaryPageTitleBold, `${cfg.labels.meetingLabel} ${meetingIndex + 1 + (sectionIndex * cfg.meetingCountPerPage)}`);
 
         // === Buttons ===
-        const buttons = [{ text: "Back", pageNumber: homePage, link: true }];
+        const buttons = [{ text: cfg.labels.buttons.back, pageNumber: homePage, link: true }];
         componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight - cfg.sidebarWidth - 20, cfg.marginTop + 10, buttons, 15)
 
         const verticalSpacing = 25;
@@ -18,8 +18,6 @@ export class MeetingNotesPage {
 
         let x = cfg.marginLeft;
         let y = cfg.marginTop;
-
-        //pdf.line(x + 277, y, x + 277, y + 500); // debug line
 
         // === Header section ===
         {
@@ -32,8 +30,8 @@ export class MeetingNotesPage {
             // First line
             {
                 // Meeting name label
-                componentsBuilder.drawText(x + 10, y, homePage, `Meeting name:`, itemFontSizes);
-                const meetingNameTextWidth = pdf.getTextWidth('Meeting name:');
+                componentsBuilder.drawText(x + 10, y, homePage, cfg.labels.fields.meetingName, itemFontSizes);
+                const meetingNameTextWidth = pdf.getTextWidth(cfg.labels.fields.meetingName);
                 x += meetingNameTextWidth + 10;
 
                 // Meeting name dotted line
@@ -43,8 +41,8 @@ export class MeetingNotesPage {
                 x += 190.4;
 
                 // Date label
-                componentsBuilder.drawText(x + 10, y, homePage, `Date:`, itemFontSizes);
-                const dateTextWidth = pdf.getTextWidth('Date:');
+                componentsBuilder.drawText(x + 10, y, homePage, cfg.labels.fields.date, itemFontSizes);
+                const dateTextWidth = pdf.getTextWidth(cfg.labels.fields.date);
                 x += dateTextWidth + 10;
 
                 // Date dotted line
@@ -59,9 +57,9 @@ export class MeetingNotesPage {
             // Second line
             {
                 // Objective label
-                componentsBuilder.drawText(x + 10, y, homePage, `Objective:`, itemFontSizes);
-                const meetingNameTextWidth = pdf.getTextWidth('Objective:');
-                x += meetingNameTextWidth + 10;
+                componentsBuilder.drawText(x + 10, y, homePage, cfg.labels.fields.objective, itemFontSizes);
+                const objectiveTextWidth = pdf.getTextWidth(cfg.labels.fields.objective);
+                x += objectiveTextWidth + 10;
 
                 // Objective dotted line part 1
                 pdf.setLineWidth(0.8);
@@ -70,9 +68,9 @@ export class MeetingNotesPage {
                 x += 212.5;
 
                 // Time label
-                componentsBuilder.drawText(x + 10, y, homePage, `Time:`, itemFontSizes);
-                const dateTextWidth = pdf.getTextWidth('Time:');
-                x += dateTextWidth + 10;
+                componentsBuilder.drawText(x + 10, y, homePage, cfg.labels.fields.time, itemFontSizes);
+                const timeTextWidth = pdf.getTextWidth(cfg.labels.fields.time);
+                x += timeTextWidth + 10;
 
                 // Time dotted line
                 pdf.setLineWidth(0.8);
@@ -85,16 +83,10 @@ export class MeetingNotesPage {
 
             // Third line
             {
-                // Objective dotted line part 2
-                pdf.setLineWidth(0.8);
-                pdf.setLineDashPattern([1, 2], 0);
-                pdf.line(x + 10, y, x + 266.3, y);
-                x += 266.3;
-
                 // Location label
-                componentsBuilder.drawText(x + 10, y, homePage, `Location:`, itemFontSizes);
-                const dateTextWidth = pdf.getTextWidth('Time:');
-                x += dateTextWidth + 10;
+                componentsBuilder.drawText(x + 10, y, homePage, cfg.labels.fields.location, itemFontSizes);
+                const locationTextWidth = pdf.getTextWidth(cfg.labels.fields.location);
+                x += locationTextWidth + 10;
 
                 // Location dotted line
                 pdf.setLineWidth(0.8);
@@ -120,10 +112,10 @@ export class MeetingNotesPage {
             meetingNotesTableConfig.Columns = [
                 {
                     Width: cfg.usableWidth,
-                    Text: 'MEETING NOTES',
+                    Text: cfg.labels.sections.meetingNotes,
                 },
             ];
-            meetingNotesTableConfig.RowCount = 10;
+            meetingNotesTableConfig.RowCount = 15;
             meetingNotesTableConfig.Rows = [
                 {
                     BackgroundColor: [255, 255, 255],
@@ -141,58 +133,56 @@ export class MeetingNotesPage {
             });
         }
 
-        // === Action items section ===
-        {
-            x = cfg.marginLeft;
-
-            pdf.setLineWidth(1);
-            pdf.setLineDashPattern(0);
-
-            const actionItemsTableConfig = new TableConfig();
-            actionItemsTableConfig.Length = cfg.usableWidth - 10;
-            actionItemsTableConfig.IncludeHeaders = true;
-            actionItemsTableConfig.HeaderBold = false;
-            actionItemsTableConfig.HeaderFontSize = 12;
-            actionItemsTableConfig.HeaderTextColor = cfg.black;
-            actionItemsTableConfig.DividerLineWidth = 0.5;
-            actionItemsTableConfig.Columns = [
-                {
-                    Width: cfg.dynamicWidth(60),
-                    Text: 'Action item',
-                    DividerLine: true,
-                },
-                {
-                    Width: cfg.dynamicWidth(20),
-                    Text: 'Owner',
-                    DividerLine: true,
-                },
-                {
-                    Width: cfg.dynamicWidth(20),
-                    Text: 'Due',
-                }
-            ];
-            actionItemsTableConfig.RowCount = 5;
-            actionItemsTableConfig.Rows = [
-                {
-                    BackgroundColor: [255, 255, 255],
-                }
-            ];
-            actionItemsTableConfig.RowHeight = 20;
-            actionItemsTableConfig.RowDividerLine = false;
-
-            componentsBuilder.drawTable(x + 5, y + 330, actionItemsTableConfig, (rowIndex, columnIndex, xLeading, xTrailing, yTop, yCenter, yBottom) => {
-                pdf.setLineWidth(0.8);
-                pdf.setLineDashPattern([1, 2], 0);
-                pdf.line(xLeading + 10, yBottom - 5, xTrailing - (columnIndex < 2 ? 10 : 15), yBottom - 5);
-                pdf.setLineWidth(1);
-                pdf.setLineDashPattern(0);
-            });
-
-            // Draw border
-            pdf.setLineWidth(1);
-            pdf.roundedRect(x, y + 308, cfg.usableWidth, 140, 2, 2, 'S');
-        }
-
-
+        // // === Action items section ===
+        // {
+        //     x = cfg.marginLeft;
+        //
+        //     pdf.setLineWidth(1);
+        //     pdf.setLineDashPattern(0);
+        //
+        //     const actionItemsTableConfig = new TableConfig();
+        //     actionItemsTableConfig.Length = cfg.usableWidth - 10;
+        //     actionItemsTableConfig.IncludeHeaders = true;
+        //     actionItemsTableConfig.HeaderBold = false;
+        //     actionItemsTableConfig.HeaderFontSize = 12;
+        //     actionItemsTableConfig.HeaderTextColor = cfg.black;
+        //     actionItemsTableConfig.DividerLineWidth = 0.5;
+        //     actionItemsTableConfig.Columns = [
+        //         {
+        //             Width: cfg.dynamicWidth(60),
+        //             Text: cfg.labels.columns.actionItem,
+        //             DividerLine: true,
+        //         },
+        //         {
+        //             Width: cfg.dynamicWidth(20),
+        //             Text: cfg.labels.columns.owner,
+        //             DividerLine: true,
+        //         },
+        //         {
+        //             Width: cfg.dynamicWidth(20),
+        //             Text: cfg.labels.columns.due,
+        //         }
+        //     ];
+        //     actionItemsTableConfig.RowCount = 5;
+        //     actionItemsTableConfig.Rows = [
+        //         {
+        //             BackgroundColor: [255, 255, 255],
+        //         }
+        //     ];
+        //     actionItemsTableConfig.RowHeight = 20;
+        //     actionItemsTableConfig.RowDividerLine = false;
+        //
+        //     componentsBuilder.drawTable(x + 5, y + 330, actionItemsTableConfig, (rowIndex, columnIndex, xLeading, xTrailing, yTop, yCenter, yBottom) => {
+        //         pdf.setLineWidth(0.8);
+        //         pdf.setLineDashPattern([1, 2], 0);
+        //         pdf.line(xLeading + 10, yBottom - 5, xTrailing - (columnIndex < 2 ? 10 : 15), yBottom - 5);
+        //         pdf.setLineWidth(1);
+        //         pdf.setLineDashPattern(0);
+        //     });
+        //
+        //     // Draw border
+        //     pdf.setLineWidth(1);
+        //     pdf.roundedRect(x, y + 308, cfg.usableWidth, 140, 2, 2, 'S');
+        // }
     }
 }

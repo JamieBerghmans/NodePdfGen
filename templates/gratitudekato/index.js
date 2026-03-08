@@ -1,7 +1,16 @@
 import open from "open";
+import { mkdirSync } from 'fs';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { join } from 'path';
 import { cfg, pdf } from "./Config.js";
 import { MonthOverviewPage } from "./pages/MonthOverviewPage.js";
 import { DailyPage } from "./pages/DailyPage.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const outputPath = process.env.PDF_OUTPUT_PATH || join(__dirname, '..', '..', 'outputs', 'gratitudekato-default-en.pdf');
+mkdirSync(dirname(outputPath), { recursive: true });
 
 const monthOverviewPage = new MonthOverviewPage();
 const dailyPage = new DailyPage();
@@ -14,7 +23,7 @@ const drawSideBar = (activeMonth) => {
 
         const currentFillColor = pdf.getFillColor();
         const currentTextColor = pdf.getTextColor();
-        const currentFontSize = pdf.getFontSize();
+        const currentFontSize  = pdf.getFontSize();
 
         const y = cfg.marginTop + ((cfg.sidebarItemHeight - cfg.sidebarItemOverlap) * i);
         pdf.setFillColor(...color);
@@ -22,9 +31,9 @@ const drawSideBar = (activeMonth) => {
 
         pdf.setTextColor(cfg.black);
         pdf.setFontSize(10);
-        
+
         // Rotate text
-        pdf.text(`${cfg.months[i].substring(0, 3)}`, cfg.pageWidth - cfg.marginRight - 13, y + cfg.sidebarOffsetTop + (cfg.sidebarItemHeight / 2) - 12, { align: "left", angle: -90 });
+        pdf.text(`${cfg.labels.months[i].substring(0, 3)}`, cfg.pageWidth - cfg.marginRight - 13, y + cfg.sidebarOffsetTop + (cfg.sidebarItemHeight / 2) - 12, { align: "left", angle: -90 });
 
         // Apply link
         pdf.link(cfg.pageWidth - cfg.marginRight - cfg.sidebarWidth, y + cfg.sidebarOffsetTop, cfg.sidebarWidth, cfg.sidebarItemHeight, { pageNumber: pageLink });
@@ -41,17 +50,16 @@ for (let i = 0; i < cfg.sectionCount; i++) {
     const previousHomePage = i > 0 ? monthOverviewPage.getPageNumber(i - 1) : -1;
     const nextHomePage = i < cfg.sectionCount - 1 ? monthOverviewPage.getPageNumber(i + 1) : -1;
 
-    // console.log(`Building section ${cfg.months[i]} (page ${homePage}) with previous page ${previousHomePage} and next page ${nextHomePage}`);
-
     monthOverviewPage.build(i, homePage, previousHomePage, nextHomePage);
     drawSideBar(i);
 
     for (let j = 0; j < monthOverviewPage.getDaysInMonth(i); j++) {
-        // console.log(`Amount of days in ${cfg.months[i]}: ${monthOverviewPage.getDaysInMonth(i)}`);
         dailyPage.build(i, j, homePage);
         drawSideBar(i);
     }
 }
 
-pdf.save("templates/gratitudekato/Gratitude Template Kato.pdf");
-open("templates/gratitudekato/Gratitude Template Kato.pdf");
+pdf.save(outputPath);
+
+const shouldOpen = process.env.PDF_OPEN !== '0';
+if (shouldOpen) open(outputPath);

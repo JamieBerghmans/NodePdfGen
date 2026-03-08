@@ -1,0 +1,21 @@
+{
+    "summaryPageTitle": "Retrospective ",
+    "summaryPageTitleBold": "Samenvatting",
+    "retroLabel": "Retro",
+    "columns": {
+        "number": "#",
+        "keywords": "Trefwoorden",
+        "date": "Datum"
+    },
+    "sections": {
+        "positive": "Positief",
+        "neutral": "Neutraal",
+        "negative": "Negatief",
+        "meetingNotes": "VERGADERNOTITIES"
+    },
+    "buttons": {
+        "previous": "Vorige",
+        "next": "Volgende",
+        "back": "Terug"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "homePageTitle": "Te Doen ",
+    "homePageTitleBold": "Lijst",
+    "notesIntroTitle": "Te Doen ",
+    "notesIntroTitleBold": "Notities",
+    "subTaskPageTitle": "Subtaak ",
+    "subTaskPageTitleBold": "Triage",
+    "taskLabel": "Taak #",
+    "columns": {
+        "task": "Taak",
+        "due": "Deadline",
+        "priority": "Prioriteit",
+        "progress": "Voortgang",
+        "actions": "Acties",
+        "subTaskDescription": "Subtaak omschrijving",
+        "dueDate": "Deadline"
+    },
+    "buttons": {
+        "previous": "Vorige",
+        "next": "Volgende",
+        "notes": "Notities",
+        "home": "Start",
+        "subtasks": "Subtaken"
+    }
+}

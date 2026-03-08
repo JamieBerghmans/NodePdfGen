@@ -17,10 +17,10 @@ export class RetrospectiveListPage {
         // === Buttons ===
         const buttons = [];
         if (homePage > 1) {
-            buttons.push({ text: "Previous", pageNumber: homePage - pagesPerSection, link: true });
+            buttons.push({ text: cfg.labels.buttons.previous, pageNumber: homePage - pagesPerSection, link: true });
         }
         if (sectionIndex < cfg.sectionCount - 1) {
-            buttons.push({ text: "Next", pageNumber: homePage + pagesPerSection, link: true });
+            buttons.push({ text: cfg.labels.buttons.next, pageNumber: homePage + pagesPerSection, link: true });
         }
         componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight - cfg.sidebarWidth - 20, cfg.marginTop + 10, buttons, 15)
 
@@ -32,16 +32,16 @@ export class RetrospectiveListPage {
             {
                 Width: cfg.dynamicWidth(8),
                 DividerLine: true,
-                Text: '#',
+                Text: cfg.labels.columns.number,
             },
             {
                 Width: cfg.dynamicWidth(58),
                 DividerLine: true,
-                Text: 'Key words'
+                Text: cfg.labels.columns.keywords
             },
             {
                 Width: cfg.dynamicWidth(35),
-                Text: 'Date'
+                Text: cfg.labels.columns.date
             }
         ];
         tableConfig.RowCount = cfg.meetingCountPerPage;
@@ -63,16 +63,15 @@ export class RetrospectiveListPage {
             if (columnIndex === 0) {
                 // Numbering
                 pdf.setFontSize(12);
-                //26 = Current sprint
-                pdf.text(String(26 + (rowIndex + 1) + (sectionIndex * cfg.meetingCountPerPage)), xLeading + 15, yCenter + 5, { align: 'center' });
+                pdf.text(String(cfg.startSprint + (rowIndex + 1) + (sectionIndex * cfg.meetingCountPerPage) - 1), xLeading + 15, yCenter + 5, { align: 'center' });
             }
 
             if (columnIndex === 2) {
                 // Set the position and size for the circle
                 pdf.setLineWidth(1);
                 const circleX = xTrailing - 15; // X-coordinate of the circle's center
-                const circleY = yCenter; // Y-coordinate of the circle's center
-                const circleRadius = 8; // Radius of the circle
+                const circleY = yCenter;         // Y-coordinate of the circle's center
+                const circleRadius = 8;          // Radius of the circle
 
                 // Draw the circle
                 pdf.setFillColor(cfg.black)
@@ -80,13 +79,13 @@ export class RetrospectiveListPage {
                 pdf.setFillColor(cfg.white);
                 pdf.circle(circleX, circleY, circleRadius - 2, 'F');
                 pdf.setFillColor(cfg.black);
-                
+
                 // Set the position for the arrow
                 pdf.setDrawColor(cfg.black);
                 const arrowStartX = circleX - 3; // Start X-coordinate of the arrow
-                const arrowStartY = circleY; // Start Y-coordinate of the arrow
-                const arrowEndX = circleX + 4; // End X-coordinate of the arrow
-                const arrowEndY = circleY; // End Y-coordinate of the arrow
+                const arrowStartY = circleY;      // Start Y-coordinate of the arrow
+                const arrowEndX = circleX + 4;   // End X-coordinate of the arrow
+                const arrowEndY = circleY;        // End Y-coordinate of the arrow
 
                 // Draw the arrow line
                 pdf.setLineWidth(1.5);

@@ -1,4 +1,4 @@
-import { pdf, cfg, componentsBuilder, helper } from '../Shared.js';
+import { pdf, cfg, componentsBuilder, helper } from '../Config.js';
 import { TableConfig } from '../../../shared/TableConfig.js';
 
 export class HomePage {
@@ -8,16 +8,16 @@ export class HomePage {
             pdf.addPage();
         }
 
-        componentsBuilder.drawPageHeader(cfg.marginLeft + 15, cfg.marginTop + 10, "To Do ", "List");
+        componentsBuilder.drawPageHeader(cfg.marginLeft + 15, cfg.marginTop + 10, cfg.labels.homePageTitle, cfg.labels.homePageTitleBold);
 
         // === Buttons ===
         const buttons = [];
         if (homePage > 1) {
-            buttons.push({ text: "Previous", pageNumber: homePage - pagesPerSection, link: true });
+            buttons.push({ text: cfg.labels.buttons.previous, pageNumber: homePage - pagesPerSection, link: true });
         }
-        buttons.push({ text: "Notes", pageNumber: homePage + 1, link: true });
+        buttons.push({ text: cfg.labels.buttons.notes, pageNumber: homePage + 1, link: true });
         if (sectionIndex < cfg.sectionCount - 1) {
-            buttons.push({ text: "Next", pageNumber: homePage + pagesPerSection, link: true });
+            buttons.push({ text: cfg.labels.buttons.next, pageNumber: homePage + pagesPerSection, link: true });
         }
 
         componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight - 30, cfg.marginTop + 10, buttons, 15)
@@ -26,25 +26,25 @@ export class HomePage {
         tableConfig.Length = cfg.pageWidth - cfg.marginLeft - cfg.marginRight;
         tableConfig.Columns = [
             {
-                Width: 212,
+                Width: 230,
                 DividerLine: true,
-                Text: 'Task',
+                Text: cfg.labels.columns.task,
             },
             {
                 Width: 60,
-                Text: 'Due'
+                Text: cfg.labels.columns.due
             },
             {
                 Width: 45,
-                Text: 'Priority'
+                Text: cfg.labels.columns.priority
             },
             {
                 Width: 55,
-                Text: 'Progress'
+                Text: cfg.labels.columns.progress
             },
             {
                 Width: 50,
-                Text: 'Actions'
+                Text: cfg.labels.columns.actions
             }
         ];
         tableConfig.RowCount = cfg.taskCount;

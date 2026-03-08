@@ -1,0 +1,25 @@
+{
+    "homePageTitle": "To Do ",
+    "homePageTitleBold": "List",
+    "notesIntroTitle": "To Do ",
+    "notesIntroTitleBold": "Notes",
+    "subTaskPageTitle": "Sub Task ",
+    "subTaskPageTitleBold": "Triage",
+    "taskLabel": "Task #",
+    "columns": {
+        "task": "Task",
+        "due": "Due",
+        "priority": "Priority",
+        "progress": "Progress",
+        "actions": "Actions",
+        "subTaskDescription": "Sub Task Description",
+        "dueDate": "Due Date"
+    },
+    "buttons": {
+        "previous": "Previous",
+        "next": "Next",
+        "notes": "Notes",
+        "home": "Home",
+        "subtasks": "Subtasks"
+    }
+}

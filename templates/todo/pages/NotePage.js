@@ -1,4 +1,4 @@
-import { pdf, cfg, componentsBuilder } from "../Shared.js";
+import { pdf, cfg, componentsBuilder } from "../Config.js";
 
 export class NotePage {
 
@@ -18,18 +18,18 @@ export class NotePage {
 
         // Draw buttons
         let buttons = [
-            { text: "Home", pageNumber: homePage, link: true },
+            { text: cfg.labels.buttons.home, pageNumber: homePage, link: true },
         ];
         if (index >= 0) {
             buttons.push(
-                { text: "Subtasks", pageNumber: homePage + (index + 2) + cfg.taskCount, link: true }
+                { text: cfg.labels.buttons.subtasks, pageNumber: homePage + (index + 2) + cfg.taskCount, link: true }
             );
         }
         componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight - 30, cfg.marginTop + 10, buttons, 15)
 
         // Lines
         pdf.setDrawColor(cfg.grey);
-        for (let y = 100; y < cfg.pageHeight - cfg.marginBottom; y += cfg.rowHeight)
+        for (let y = 120; y < cfg.pageHeight - cfg.marginBottom; y += cfg.rowHeight)
             pdf.line(cfg.marginLeft, y, cfg.pageWidth - cfg.marginRight, y);
     }
 }

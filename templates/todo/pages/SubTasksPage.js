@@ -1,4 +1,4 @@
-import { pdf, cfg, componentsBuilder, helper } from '../Shared.js';
+import { pdf, cfg, componentsBuilder, helper } from '../Config.js';
 import { TableConfig } from '../../../shared/TableConfig.js';
 
 export class SubTasksPage {
@@ -12,27 +12,27 @@ export class SubTasksPage {
         pdf.rect(cfg.marginLeft + 5, cfg.marginTop - 10, 200, height, 'F');
 
         pdf.setTextColor(0);
-        componentsBuilder.drawPageHeader(cfg.marginLeft + 15, cfg.marginTop + 10, "Sub Task ", "Triage", `Task #${(index + 1) + (sectionIndex * cfg.taskCount)}`);
-        
+        componentsBuilder.drawPageHeader(cfg.marginLeft + 15, cfg.marginTop + 10, cfg.labels.subTaskPageTitle, cfg.labels.subTaskPageTitleBold, `${cfg.labels.taskLabel}${(index + 1) + (sectionIndex * cfg.taskCount)}`);
+
         componentsBuilder.drawMenu(cfg.pageWidth - cfg.marginRight - 30, cfg.marginTop + 10, [
-            { text: "Home", pageNumber: homePage, link: true },
-            { text: "Notes", pageNumber: homePage + 1 + index + 1, link: true }
+            { text: cfg.labels.buttons.home, pageNumber: homePage, link: true },
+            { text: cfg.labels.buttons.notes, pageNumber: homePage + 1 + index + 1, link: true }
         ], 15)
 
         const tableConfig = new TableConfig();
         tableConfig.Length = cfg.pageWidth - cfg.marginLeft - cfg.marginRight;
         tableConfig.Columns = [
             {
-                Width: 249,
-                Text: 'Sub Task Description'
+                Width: 265,
+                Text: cfg.labels.columns.subTaskDescription
             },
             {
                 Width: 45,
-                Text: 'Priority'
+                Text: cfg.labels.columns.priority
             },
             {
                 Width: 80,
-                Text: 'Due Date'
+                Text: cfg.labels.columns.dueDate
             }
         ];
         tableConfig.RowCount = cfg.subTaskCount;
@@ -46,7 +46,7 @@ export class SubTasksPage {
 
         componentsBuilder.drawTable(cfg.marginLeft, cfg.marginTop + 60, tableConfig, (rowIndex, columnIndex, xLeading, xTrailing, yTop, yCenter, yBottom) => {
             pdf.setLineWidth(tableConfig.DividerLineWidth)
-            
+
             if (columnIndex === 0) {
                 // Checking circle
                 pdf.circle(xLeading + 6, yCenter, 6, 'S');

@@ -35,7 +35,7 @@ export class MonthOverviewPage {
         */
 
         pdf.setTextColor(...cfg.colors[monthIndex]);
-        componentsBuilder.drawPageHeader(cfg.marginLeft + 10, cfg.marginTop + 20, cfg.months[monthIndex], undefined, undefined, 'helvetica', 25);
+        componentsBuilder.drawPageHeader(cfg.marginLeft + 10, cfg.marginTop + 20, cfg.labels.months[monthIndex], undefined, undefined, 'helvetica', 25);
 
         const daysInMonth = this.getDaysInMonth(monthIndex);
         const marginLeft = cfg.marginLeft;

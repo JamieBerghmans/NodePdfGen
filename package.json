@@ -1,9 +1,10 @@
 {
   "name": "my-pdf-project",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "generate.js",
   "type": "module",
   "scripts": {
+    "gen": "node generate.js",
     "todo": "node templates/todo/index.js",
     "meetingnotes": "node templates/meetingnotes/index.js",
     "gratitude": "node templates/gratitude/index.js",

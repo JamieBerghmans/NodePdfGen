@@ -1,7 +1,16 @@
 import open from "open";
+import { mkdirSync } from 'fs';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { join } from 'path';
 import { cfg, pdf } from "./Config.js";
 import { RetrospectiveListPage } from "./pages/RetrospectiveListPage.js";
 import { RetrospectiveSummaryPage } from "./pages/RetrospectiveSummaryPage.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const outputPath = process.env.PDF_OUTPUT_PATH || join(__dirname, '..', '..', 'outputs', 'retrospectives-default-en.pdf');
+mkdirSync(dirname(outputPath), { recursive: true });
 
 const pagesPerSection = 1 + cfg.meetingCountPerPage;
 
@@ -12,7 +21,7 @@ const drawSideBar = () => {
 
         const currentFillColor = pdf.getFillColor();
         const currentTextColor = pdf.getTextColor();
-        const currentFontSize = pdf.getFontSize();
+        const currentFontSize  = pdf.getFontSize();
 
         const y = cfg.marginTop + ((cfg.sidebarItemHeight - cfg.sidebarItemOverlap) * i);
         pdf.setFillColor(...color.color);
@@ -20,7 +29,7 @@ const drawSideBar = () => {
 
         pdf.setTextColor(color.text);
         pdf.setFontSize(10);
-        
+
         // Rotate text
         pdf.text(`${i + 1}`, cfg.pageWidth - cfg.marginRight - 13, y + cfg.sidebarOffsetTop + (cfg.sidebarItemHeight / 2) - 6, { align: "left", angle: -90 });
 
@@ -48,5 +57,7 @@ for (let i = 0; i < cfg.sectionCount; i++) {
     }
 }
 
-pdf.save("templates/retrospectives/Retrospectives Template.pdf");
-open("templates/retrospectives/Retrospectives Template.pdf");
+pdf.save(outputPath);
+
+const shouldOpen = process.env.PDF_OPEN !== '0';
+if (shouldOpen) open(outputPath);
